@@ -1,0 +1,244 @@
+--0
+--0 Scrivere una query che dia come risultato i primi 10 impiegati con il salario piu' alto.
+with richemp as 
+(select first_name
+from   employees
+order  by salary desc)
+Select first_name
+from richemp
+where rownum <= 10;
+
+--1
+--1 Scrivere una query che dia come risultato il Region_id corrispettivo alla Region_name 'Europe'.
+select region_id 
+from regions 
+where region_name = 'Europe';
+
+
+--2
+--2 Scrivere una query che dia come risultato il nome ed il cognome degli impiegati e che nel nome sia contenuta la stringa 'li'.
+select  first_name, last_name 
+from  employees 
+where first_name like '%li%'
+or last_name like '%li%';
+
+--3
+--3 Scrivere una query che dia come risultato quali nomi degli impiegati si ripetono piu di una volta e indicare quante volte si ripetono.
+select count(*), first_name
+from employees 
+group by first_name
+having count(*) > 1;
+
+--4
+--4 Scrivere una query dia come risultato il nome ed il cognome degli impiegati e che sia presente anche job_title di tutti gli impiegati usando la tabella jobs.
+select employees.first_name, employees.last_name, jobs.job_title
+from employees, jobs
+where employees.job_id = jobs.job_id ;
+
+--5
+--5 Scrivere una query che dia come risultato quanti paesi ci sono in Europa.
+select count (*) 
+from countries 
+where region_id = 1;
+
+--6
+--6 Scrivere una query che dia come risultato employee_id, il cognome e la data di assunzione degli impiegati
+	--che hanno lavorato per piu di 90 mesi dalla data di assunzione che ÃƒÂ¨ il 01 gennaio 2000.
+select employee_id, last_name, hire_date
+from employees
+where MONTHS_BETWEEN( hire_date, TO_CHAR(TO_DATE('01-01-2000', 'dd-mm-yyyy'))) > 90;
+
+--7
+--7 Scrivere una query che dia come risultato l'elenco dei paesi Europei ordinati in ordine alfabetico descrescente rispetto al nome.
+select country_name 
+from countries 
+where region_id = 1 ORDER BY COUNTRY_NAME DESC;
+
+--8
+--8 Scrivere una query che dia come risultato solo i dipendenti che sono stati assunti nei mesi di giugno, luglio e agosto e che lavorano da piÃƒÂ¹ di due anni.
+select last_name, first_name, hire_date 
+from employees
+where months_between(sysdate, hire_date)>24
+and to_char(hire_date, 'mm' ) in (6,7,8);
+
+--9
+--9 Scrivere una query che dia come risultato il nome, il cognome e il department_id per quei dipendenti che 
+    --lavorano nello stesso dipartimento dei dipendenti che hanno il cognome Taylor.
+select first_name, last_name, department_id
+from employees
+where department_id in (select department_id from employees where last_name='Taylor');
+
+--10
+--10 Scrivere una query che dia come risultato il department_id, il nome di ogni dipartimento, il salario medio di ogni dipartimento arrotondato
+	--per eccesso e il numero di impiegati di ogni dipartimento.
+select departments.department_id, department_name,round(avg(salary),2), count(*) num_emp
+from DEPARTMENTS join employees  
+on departments.department_id = employees.department_id
+GROUP BY departments.department_id, department_name;
+
+--11
+--11 Scrivere una query che dia come risultato il massimo, il minimo, la media dei salari dei dipendenti che hanno lo stesso job_title.
+select j.job_id, j.job_title,
+max(salary), min(salary), avg(salary)
+from jobs j,employees e 
+where j.job_id = e.job_id
+group by j.job_id, j.job_title;
+     
+--12
+--12 Scrivere una query che dia come risultato i giorni della settimana in cui 15 o piu impiegati sono stati assunti e che mostri il conteggio di quante persone
+--sono state assunte.
+select to_char (hire_date, 'Day') giorno, count(*) numero_assunti
+from employees
+group by to_char (hire_date,'Day')
+having count (*) >=15
+order by numero_assunti desc;
+     
+--13
+--13 Scrivi una query che dia come risultato l'employee_id, il nome, il cognome ed il salario.
+--Se il salario di un dipendente ÃƒÂ¨ uguale o supera il salario medio, allora contrassegnalo con 'High', altrimenti 'Low'.
+select employee_id,first_name, last_name, salary, case when salary >= (select avg(salary) from employees) then 'high' else 'low' end as salary_status
+from employees
+group by employee_id, first_name, last_name, salary;
+
+--14
+--14 Scrivere una query che dia come risultato il salario piÃƒÂ¹ alto di ogni paese.
+select c.country_name, max(salary)
+from employees e join departments d
+on e.department_id = d.department_id
+join locations l
+on d.location_id = l.location_id
+join countries c
+on l.country_id = c.country_id
+group by c.country_name;
+
+--15
+--15 Scrivere una query che dia come risultato il nome ed il cognome degli impiegati del dipartimento numero 100. 
+  --Inoltre deve aggiungere un campo che se il nome ed il cognome hanno la stessa lunghezza deve corrispondere 'Same Length', altrimenti 'Different Length'.
+select first_name, last_name, 
+decode(length(first_name), length(last_name), 'Same Length', 'Different Length')
+from employees
+where department_id = 100;
+
+--16
+--16 Scrivere una query che dia come risultato nome, cognome ed una colonna "IMPIEGO" che riporti:
+  --Quando il job_id ÃƒÂ¨ 'AD_PRES' allora 'PRESIDENTE'
+  --Quando il job_id ÃƒÂ¨ 'AD_VP' allora 'VICE PRESIDENTE'
+  --Quando il job_id ÃƒÂ¨ 'IT_PROG' allora 'PROGRAMMATORE'
+  --altrimenti 'ALTRO IMPIEGO'.
+select first_name, last_name, 
+case job_id  when 'AD_PRES' then 'PRESIDENTE'
+when 'AD_VP' then 'VICE PRESIDENTE'
+when 'IT_PROG' then 'PROGRAMMATORE'
+else 'ALTRO IMPIEGO' end as IMPIEGO
+from employees;
+
+--17
+--17 Scrivere una query che dia come risultato l'employee_id, il nome ed il cognome di tutti i manager, e il numero di impiegati sottoposti, ordinato per l'employee_id
+	--in ordine decrescente.
+select m.employee_id, m.first_name, m.last_name, count(e.employee_id) numsottoposti
+from employees m, employees e
+where m.employee_id = e.manager_id
+group by m.employee_id, m.first_name, m.last_name
+order by count(e.employee_id) desc;
+
+--18
+--18 Scrivere una query che dia come risultato l'employee_id, il nome ed il cognome DEI MANAGER e dei corrispettivi DIPENDENTI, mostrando
+	--il loro employee_id, nome, cognome e l'id del manager a cui sono sottoposti. Ordinali per l'employee_id del manager.
+select m.employee_id, m.first_name, m.last_name, e.employee_id, e.first_name, e.last_name, e.manager_id
+from employees m, employees e
+where m.employee_id (+) = e.manager_id
+--RIGHT JOIN e ON m.employee_id=e.manager_id  utilizzabile al posto del where anche se nella versione 11g non funziona 
+order by m.employee_id;
+
+--Right Join dalla tabella 'a' alla tabella 'b' . Restituirà tutti i dati della tabella 'b' senza perdere i suoi dati quando l'altro lato (tabella opzionale 'a') non ha dati.
+
+
+--19
+--19 Scrivi una query che dia come risultato il nome, il cognome, il nome del dipartimento, la cittÃƒ  e lo state_province per gli impiegati che hanno nel nome una 'z'.
+select e.first_name,e.last_name, d.department_name, l.city, l.state_province
+from employees e 
+join departments d  
+on e.department_id = d.department_id 
+join locations l 
+on d.location_id = l.location_id 
+where lower(e.first_name) like '%z%';
+
+--20
+--20 Scrivi una query che dia come risultato il mese d'assunzione di quando 2 o piÃƒÂ¹ impiegati che sono stati assunti nei 
+	--dipartimenti di Seattle. 
+select to_char(hire_date,'mon-yy')
+from emplotees join departments 
+using(department_id)
+join locations
+using (location_id 
+where city = 'Seattle'
+group by to_char(hire_date,'mon-yy'), department_id
+having count(*) >=2 ;
+
+
+
+--21
+--21 Scrivi una query che dia come risultato l'employee_id, il nome, il cognome, il salario, il nome del dipartimento e la cittÃƒ 
+	--per l'impiegato che guadagna di piÃƒÂ¹ e che si ÃƒÂ¨ unito tra il 01/01/2002 e il 31/12/2003.
+
+select e.employee_id, e.first_name, e.last_name, s.salay, d.department_name, l.city
+from employees e 
+inner join departments d
+on e.department_id = d.department_id
+inner join locations l
+on d.location_id = l.location_id
+where e.salary IN (select max(salary)
+from employees
+where hire_date BETWEEN to_Date('01-01-2002', 'dd-mm-yyyy') and to_date('31-12-2003', 'dd-mm-yyyy'));
+
+
+--22
+--22 Crea la tabella: 
+--Nominala REGIONS_COPY e sarÃƒ  la copia della tabella REGIONS,
+create table regions_copy AS
+select *
+from regions;
+
+
+--23(a) 
+--23(a) NB. Andremo ad utilizzare la tabella creata nell'esercizio 23.
+	--Aggiorna con update il region_name 'Middle East and Africa' con 'Oceania'
+update regions_copy
+set region_name = 'Oceania'
+where region_name = 'Middle East and Africa';
+                              
+--23(b)
+--23(b) Controllare l'update con select che tutto sia andato come progettato.       
+select region_name
+from regions_copy
+where region_name = 'Oceania'
+
+--23(c)
+--23(c) Fare una delete sul campo di region_id dove l'id sono maggiori di 2 cosi' da modificare nuovamente
+	--la tabella regions_copy.
+delete regions_copy
+where region_id > 2;
+
+
+--23(d)
+--23(d) Ricordarsi di committare la transazione se il risultato e' come voluto.
+commit;
+
+--23(e)
+--23(e) Infine fare pulizia droppando la tabella copia creata.
+drop table regions_capy;
+
+--24
+--24 Aggiorna con update il salario aumentandolo del 10% per i dipendenti che lavorano nella Region_name = 'Americas'.
+update employees
+set salary = salary * 1.1
+where department_id in (
+select distinct e.department_id
+from employees e 
+join departments d on (e.department_id = d.department_id)
+join locations l on (l.location_id = d.location_id)
+join countries c on (l.country_id = c.country_id)
+join regions r on (c.region_id = r.region_id)
+where r.region_name = 'Americas');
+
+     

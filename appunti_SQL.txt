@@ -1,0 +1,157 @@
+INSERT
+INTO Anagrafica
+(Nome, Cognome, Stipendio)
+VALUES(‘Lucia’, ‘Bianchi', 20000);
+
+scrittura completa che permette di inserire soltanto alcuni record andando a specificare le colonne nelle parentesi 
+
+
+
+SELECT Nome, Cognome
+FROM Anagrafica
+WHERE Cognome = ‘Rossi’;
+
+seleziona le colonne dall'anagrafica con una ricerca nella colonna cognome 
+
+
+
+DELETE
+FROM Anagrafica
+WHERE Nome = ‘Carlo’;
+
+cancella dalla tabella anagrafica tutti i record in cui compare il nome Carlo
+
+
+
+UPDATE Anagrafica
+SET Ruolo = ‘Impiegato’
+WHERE Cognome = ‘Bianchi’
+AND Nome = ‘Lucia’;
+
+aggiona nella tabella anagtafica, la colonna ruolo di Bianchi Lucia
+
+
+
+CREATE TABLE Anagrafica
+(
+Nome VARCHAR2(80 BYTE),
+Cognome VARCHAR2(80 BYTE),
+Stipendio Number
+);
+
+cratiamo una tabella con tre ccolonne
+
+
+
+
+ALTER TABLE Anagrafica
+ADD COLUMN Ruolo VARCHAR2(80 BYTE);
+
+aggiungiamo una colonna alla tabella anagrafica 
+
+
+
+DROP TABLE Anagrafica;
+
+canella la tabella 
+
+
+
+
+SELECT DISTINCT COUNTRY_NAME
+FROM COUNTRIES
+WHERE REGION_ID = 1
+ORDER BY COUNTRY_NAME;
+
+
+seleziona le due colonne dalla tabella tramite il regiong e ordina i riusultati trovati tramite il country name 
+
+
+
+SELECT 'L''id per l''impiego ' || JOB_TITLE || ' Ã¨ '
+				|| JOB_ID   Impiego
+FROM JOBS;
+	
+per concatenare una stringa bisogna inserire tra gli aprici 'stringa' || colonna || 'stringa' || colonna
+
+
+
+SELECT DEPARTMENT_NAME
+FROM DEPARTMENTS
+WHERE LOWER(DEPARTMENT_NAME) LIKE '%ing';
+
+utilizzando LIKE '%ing' effettuiamo una ricerca di tutte le parole che finiscono in ing 
+
+
+
+SELECT JOB_TITLE,
+            MIN_SALARY,
+            MAX_SALARY,
+            MAX_SALARY - MIN_SALARY VARIANCE
+FROM JOBS
+WHERE  UPPER(JOB_TITLE)  LIKE '%PRESIDENT%'
+            OR UPPER(JOB_TITLE)  LIKE '%MANAGER%';
+
+estrae dalla colonna JOB_TITLE i record che contegono le parole "President " e "Manager"
+
+
+
+SELECT FIRST_NAME,
+            LAST_NAME
+FROM EMPLOYEES
+WHERE LOWER(FIRST_NAME) LIKE '%li%'; 
+
+estrae dalla colonna FIRST_NAME tutti i nomi che contengono li al loro interno utilizzando %stringa%
+
+
+
+SELECT FIRST_NAME,
+            LAST_NAME,
+            SUBSTR(FIRST_NAME,1,1) || ' ' || SUBSTR(LAST_NAME,1,14) "Nome formale"
+FROM EMPLOYEES
+WHERE LENGTH(FIRST_NAME) + LENGTH(LAST_NAME) > 15;
+
+crea il nome formale concatenando la prima lettera del nome con uno spazio e le prime 14 lettere del cognome con la condizione che 
+la lunghezza di nome + cognome si maggiore di 15 caratteri 
+
+
+
+LEFT JOIN
+
+In Oracle, (+) indica la tabella "opzionale" in JOIN.
+
+SELECT a.id, b.id, a.col_2, b.col_2, ...
+FROM a,b
+WHERE a.id=b.id(+)
+
+La sintassi standard moderna per la stessa query sarebbe
+
+SELECT  a.id, b.id, a.col_2, b.col_2, ...
+FROM a
+LEFT JOIN b ON a.id=b.id
+o con una scorciatoia per a.id=b.id(non supportato da tutti i database):
+
+SELECT  a.id, b.id, a.col_2, b.col_2, ...
+FROM a
+LEFT JOIN b USING(id)
+
+INNER JOIN 
+
+Restituirà solo tutti i dati in cui il valore "id" delle tabelle "a" e "b" è lo stesso, significa parte comune.
+
+RIGHT JOIN
+
+Vecchia sintassi Oracle:
+
+SELECT  a.id, b.id, a.col_2, b.col_2, ...
+FROM a,b
+WHERE a.id(+)=b.id
+
+Sintassi standard moderna:
+
+SELECT  a.id, b.id, a.col_2, b.col_2, ...
+FROM a
+RIGHT JOIN b ON a.id=b.id
+
+
+

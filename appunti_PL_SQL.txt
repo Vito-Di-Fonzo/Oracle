@@ -1,0 +1,97 @@
+Si può accedere a un campo di un record utilizzando la sintassi 
+<nome record>.<nome colonna>,
+
+
+
+I possibili parametri sono: 
+
+char, varchar2, number, date e boolean e tutti i corrispondenti sotto-tipi come integer.
+
+
+
+
+Un loop while ha la forma 
+
+ [<< <nome etichetta> >>] 
+while <condizione> loop
+ <sequenza di istruzioni>;
+end loop [<nome etichetta>];
+
+Un loop può avere un nome. Dare un nome a un loop è utile quando i loop sono nidificati e i primi 
+vengono completati incondizionatamente utilizzando l’istruzione exit <nome etichetta>. 
+
+
+
+
+il numero di iterazioni di un loop for può essere specificato usando due interi. 
+
+ [<< <nome etichetta> >>] 
+for <indice> in [reverse] <estremo inferiore>..<estremo superiore> loop
+ <sequenza di istruzioni> 
+end loop [<nome etichetta>];
+
+Utilizzando la parola chiave reverse si fa in modo che il processo di iterazione parta dall’estremo 
+superiore fino a quello inferiore nell’insieme specificato.
+
+
+
+
+Elaborazione di cursori: prima che un cursore possa essere usato, deve essere aperto utilizzando 
+l’istruzione open
+
+open <nome cursore> [(<lista di parametri>)]; 
+
+L’istruzione select associata viene quindi processata e il cursore punta alla prima tupla selezionata. 
+Le tuple selezionate possono essere processate una alla volta utilizzando il comando fetch 
+
+fetch <nome cursore> [(<lista di variabili>)];
+
+Il comando fetch assegna i valori degli attributi selezionati dalla tupla corrente alla lista di variabili. 
+
+Dopo che tutte le tuple sono state processate, si utilizza il comando close per chiudere e 
+disabilitare il cursore. 
+
+close <nome cursore>;
+
+
+
+
+LEFT JOIN
+
+In Oracle, (+) indica la tabella "opzionale" in JOIN.
+
+SELECT a.id, b.id, a.col_2, b.col_2, ...
+FROM a,b
+WHERE a.id=b.id(+)
+
+La sintassi standard moderna per la stessa query sarebbe
+
+SELECT  a.id, b.id, a.col_2, b.col_2, ...
+FROM a
+LEFT JOIN b ON a.id=b.id
+o con una scorciatoia per a.id=b.id(non supportato da tutti i database):
+
+SELECT  a.id, b.id, a.col_2, b.col_2, ...
+FROM a
+LEFT JOIN b USING(id)
+
+INNER JOIN 
+
+Restituirà solo tutti i dati in cui il valore "id" delle tabelle "a" e "b" è lo stesso, significa parte comune.
+
+RIGHT JOIN
+
+Vecchia sintassi Oracle:
+
+SELECT  a.id, b.id, a.col_2, b.col_2, ...
+FROM a,b
+WHERE a.id(+)=b.id
+
+Sintassi standard moderna:
+
+SELECT  a.id, b.id, a.col_2, b.col_2, ...
+FROM a
+RIGHT JOIN b ON a.id=b.id
+
+
+
