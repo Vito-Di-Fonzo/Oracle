@@ -1,0 +1,67 @@
+create or replace PROCEDURE procedura_girone ( n number)
+
+IS
+
+cont_squadra number (5);
+cont_avversario number (5);
+nome_squad varchar2(100);
+nome_avversario varchar2(100);
+num_combinazioni number (5);
+messaggio_error EXCEPTION;
+dispari_error EXCEPTION;
+
+BEGIN
+cont_squadra := 1;
+cont_avversario :=cont_squadra + 1 ;
+
+
+--verifica che il numero di squadre sia pari per poter creare i gironi
+if numero_pari(n)
+then
+    --verifica che il numero inserito dia >6 e minore <= a 26
+    if (n <= 6 or n <= 26)
+        then 
+        num_combinazioni := combinatorial(n);
+        dbms_output.put_line ('il numero di combinazioni per il girone di ANDATA è : '||num_combinazioni|| ' è '||num_combinazioni||' per il girone di RITORNO');
+        dbms_output.put_line ('i giorni necessari per le partite sono : '||(n-1)||' per ANDATA, è '||(n-1)||' per il RITORNO');
+    
+        --creo un ciclo annidato per generare le combinaioni delle squadre
+            while (cont_squadra <n or cont_squadra = n) loop
+            SELECT nome_squadra
+            INTO nome_squad
+            FROM squadre
+            where id_s = cont_squadra;
+            
+                while (cont_avversario < n or cont_avversario = n) loop
+                SELECT nome_squadra
+                INTO nome_avversario
+                FROM squadre
+                where id_s = cont_avversario;
+            
+                    if nome_squad  != nome_avversario
+                    then
+                    dbms_output.put_line (nome_squad||' vs '||nome_avversario|| '  ANDATA');
+                    dbms_output.put_line (nome_avversario||' vs '||nome_squad|| '  RITORNO');
+                    cont_avversario := cont_avversario + 1;
+                    else
+                    cont_avversario := cont_avversario + 1;
+                    end if;
+                end loop;
+                cont_squadra := cont_squadra + 1;
+                cont_avversario :=cont_squadra + 1 ;
+        
+            end loop;    
+    else
+    raise messaggio_error;
+    --dbms_output.put_line (messaggio_error);
+    end if;
+    else
+    raise dispari_error;
+end if;
+
+    EXCEPTION WHEN messaggio_error
+        THEN dbms_output.put_line ('il numero minimo di squadreè 6, il massimo è 26 ');
+            WHEN dispari_error
+            THEN  dbms_output.put_line ('il numero delle squadre deve essere pari!! ');  
+                WHEN others THEN dbms_output.put_line ('Errors');
+END procedura_girone;
