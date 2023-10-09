@@ -1,3 +1,10 @@
+/*In questa procedura vado a simulare la creazione di un girone di n squadre ( maggiorni di sei e massimo di 26 ) in cui n sia OBBLIGATORIAMENTE pari.
+Questa procedura prende in input in numero di squadre partecipanti e il loro relativo nome, andando a creare con un ciclo annidato er la generazione delle combinazioni.
+Nell'esempio sottosrtante ci sono alcune funzioni non presenti nel codice poichè vanno a fare riferimento ad altri esempri ed esercizi fatti in precedenza, che ho
+riutilizzato per svolgere questo esercizio; le due funzioni in questione non presenti vanno a verificare se il numero inserito sia pari, mentre l'altra funzione utilizza 
+il calcolo combinatorio che va a creare il girone di andata, mentre per il girone di tirorno semplicemnte si prende quello di andata e lo si ribalta. */
+
+
 create or replace PROCEDURE procedura_girone ( n number)
 
 IS
