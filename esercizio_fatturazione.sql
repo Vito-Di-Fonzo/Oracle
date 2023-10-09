@@ -1,10 +1,10 @@
 /*Creazione di un piccolo DB per la fatturazione, in questo DB avremo 3 tabelle : Cliente, Prodotto, Fattura. 
-poi avremo una tabella di associazione ( dett_fatt ), che sarà la tabella di associazione, dove troveremo
+Poi avremo una tabella di associazione ( dett_fatt ), che sarà la tabella di associazione, dove troveremo
 id_fatt e id_prod che servono per la crazione della relazione, e avere tutti i dati necessari della fattura 
-e dai prodotti associati alla fattura. per questo DB Oracle utilizzo la versione 11g, un cui non è presente 
+e dai prodotti associati alla fattura. Per questo DB Oracle utilizzo la versione 11g, un cui non è presente 
 l'auto incremento, e per ovviare a cio' ho utilizato la sequenze e il trigger, al momento la migliore soluzione 
 che ho trovato. Successivamente, verra' implementata una parte in java che andra' a gestire il tutto e stampera' 
-o visualizzera' la fattura, cin la possibilita' di eseguire le principali azioni sul db ( insert, udate, delete)*/
+o visualizzera' la fattura, con la possibilita' di eseguire le principali azioni sul db ( insert, udate, delete)*/
 
 
 drop table dett_fatt;
